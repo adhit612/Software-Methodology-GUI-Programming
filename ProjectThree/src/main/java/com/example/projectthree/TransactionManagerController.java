@@ -13,7 +13,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Class that manages on action events for UI objects.
+ * @author Abhishek Thakare, Adhit Thakur.
+ */
 public class TransactionManagerController {
+
+    //OPEN / CLOSE tab variables
     @FXML
     private TextArea mainTextArea;
 
@@ -26,13 +32,11 @@ public class TransactionManagerController {
     @FXML
     private TextField amountTextField;
 
-    //Name Text Fields
     @FXML
     private TextField firstNameTextField;
 
     @FXML
     private TextField lastNameTextField;
-    //end
 
     @FXML
     private DatePicker datePicker;
@@ -40,7 +44,6 @@ public class TransactionManagerController {
     @FXML
     private CheckBox loyalCheckBox;
 
-    //Campus code buttons
     @FXML
     private RadioButton newarkButton;
 
@@ -51,21 +54,7 @@ public class TransactionManagerController {
     private RadioButton camdenButton;
     //end
 
-    //Account type buttons
-    @FXML
-    private RadioButton moneyMarketButton;
-
-    @FXML
-    private RadioButton savingsButton;
-
-    @FXML
-    private RadioButton checkingButton;
-
-    @FXML
-    private RadioButton collegeCheckingButton;
-    //end
-
-    //DEPOSIT / WITHDRAW TAB VARIABLES
+    //DEPOSIT / WITHDRAW tab variables
     @FXML
     private ToggleGroup DWAccountTypes;
 
@@ -76,56 +65,30 @@ public class TransactionManagerController {
     private TextField dwLastNameTextField;
 
     @FXML
-    private RadioButton dwCheckingButton;
-
-    @FXML
-    private RadioButton dwSavingsButton;
-
-    @FXML
-    private RadioButton dwCollegeCheckingButton;
-
-    @FXML
-    private RadioButton dwMoneyMarketButton;
-
-    @FXML
     private TextField dwAmountTextField;
 
     @FXML
-    private Button dwDepositButton;
-
-    @FXML
-    private Button dwWithdrawButton;
-
-    @FXML
     private DatePicker dwDatePicker;
-    //END OF DEPOSIT / WITHDRAW TAB VARIABLES
-
-    //ACCOUNT DATABASE VARIABLES
-    @FXML
-    private Button adLoadFromFile;
-
-    @FXML
-    private Button adPrintAllAccounts;
-
-    @FXML
-    private Button adPrintInterestAndFees;
-
-    @FXML
-    private Button adUpdateWithInterestsAndFees;
-    //END OF ACCOUNT DATABASE
+    //end
 
     //Account storage variables
     private Account[] collection = new Account[4];
 
     AccountDatabase ad = new AccountDatabase(collection, 0);
+    //end
 
-    public Stage stage;
-
+    //Constants
     public static final int MM_LIMIT = 2000;
     public static final int MAX_AGE = 24;
     public static final int MIN_AGE = 16;
     //end
 
+    public Stage stage;
+
+    /**
+     * Method that handles the close button account operation.
+     * @param actionEvent button click event.
+     */
     public void closeButtonAction(ActionEvent actionEvent) {
         String firstName = firstNameTextField.getText();
         String lastName = lastNameTextField.getText();
@@ -147,25 +110,32 @@ public class TransactionManagerController {
             Profile prof = new Profile(firstName, lastName, new Date(convDate));
             Date date = new Date(convDate);
             if (!date.checkIfWithinBounds(date.getMonth(), date.getYear(), date.getDay())) {
-                String err = "DOB invalid: " + date.toString() + " cannot be today or a future day.";
+                String err = "DOB invalid: " + date.toString()
+                        + " cannot be today or a future day.";
                 mainTextArea.appendText(err);
             }
             else {
                 Account ac = new Checking(prof);
                 String type = accountType;
                 if (ad.containsForClose(ac, type) == null) {
-                    String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
+                    String err = prof.getFname() + " " + prof.getLname() +
+                            " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
                     mainTextArea.appendText(err);
                 }
                 else {
                     ad.close(ad.containsForClose(ac, type));
-                    String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") has been closed.\n";
+                    String err = prof.getFname() + " " + prof.getLname() + " " +
+                            prof.getDOB() + "(" + accountType + ") has been closed.\n";
                     mainTextArea.appendText(err);
                 }
             }
         }
     }
 
+    /**
+     * Method that handles the open button account operation.
+     * @param actionEvent button click event.
+     */
     public void openButtonAction(ActionEvent actionEvent) {
         String firstName = firstNameTextField.getText();
         String lastName = lastNameTextField.getText();
@@ -204,34 +174,59 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Helper for the open event button action.
+     * @param firstName first name of the profile.
+     * @param lastName last name of the profile.
+     * @param dob date of birth for the profile.
+     * @param collection collection of accounts that is being managed.
+     * @param ad account database that is being manipulated.
+     * @param decimalFormat formatter to convert the wanted initial deposit.
+     * @param amount the actual initial deposit amount.
+     * @param accountType which one of the four account types the account is.
+     */
     private void oCommandHelper(String firstName, String lastName, String dob, Account[] collection, AccountDatabase ad, DecimalFormat decimalFormat, double amount, String accountType) {
         Profile prof = new Profile(firstName, lastName, new Date(dob));
         Date date = new Date(dob);
         if (!date.isValid()) {
-            String str = "DOB invalid: " + date + " not a valid calendar date!\n";
+            String str = "DOB invalid: " + date +
+                    " not a valid calendar date!\n";
             mainTextArea.appendText(str);
             return;
         }
         if (!date.checkIfWithinBounds(date.getMonth(), date.getYear(), date.getDay())) {
-            String str = "DOB invalid: " + date + " cannot be today or a future day.\n";
+            String str = "DOB invalid: " + date +
+                    " cannot be today or a future day.\n";
             mainTextArea.appendText(str);
             return;
         }
         int age = 2023 - date.getYear();
         int dayDiff = date.getDay() - date.getTodaysDate();
         if (age <= MIN_AGE) {
-            String str = "DOB invalid: " + date + " under 16.\n";
+            String str = "DOB invalid: " + date
+                    + " under 16.\n";
             mainTextArea.appendText(str);
             return;
         }
         if (age <= MIN_AGE && dayDiff >= 0) {
-            String str = "DOB invalid: " + date + " under 16.\n";
+            String str = "DOB invalid: "
+                    + date + " under 16.\n";
             mainTextArea.appendText(str);
             return;
         }
         oCommandHelperTwo(accountType, collection, ad, amount, prof, date, age);
     }
 
+    /**
+     * Additional helper method for the open button action.
+     * @param accountType which one of the four account types the account is.
+     * @param collection collection of accounts that is being managed.
+     * @param ad account database that is being manipulated.
+     * @param res double conversion of initial deposit amount.
+     * @param prof created profile for the account to be opened.
+     * @param date date of the profile.
+     * @param age age of the user.
+     */
     private void oCommandHelperTwo(String accountType, Account[] collection, AccountDatabase ad, double res, Profile prof, Date date, int age) {
         Account account = null;
         if (accountType.equals("Checking")) {
@@ -274,6 +269,11 @@ public class TransactionManagerController {
         oCommandFinalCheck(ad, account, accountType);
     }
 
+    /**
+     * Method to determine campus code for college checking.
+     * @param campusC campus code associated with account.
+     * @return a new campus code that will be stored.
+     */
     private CampusCode oCommandSetCampusCode(String campusC) {
         if (campusC.equals("NB")) {
             return CampusCode.ZERO;
@@ -289,6 +289,12 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Final helper method to process open account
+     * @param ad account database that is being manipulated.
+     * @param account account created that will be added.
+     * @param accountType which one of the four account types the account is.
+     */
     private void oCommandFinalCheck(AccountDatabase ad, Account account, String accountType) {
         if (ad.contains(account)) {
             String res = account.getProfile().getFname() + " " +
@@ -307,6 +313,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to only show campus buttons if college checking selected.
+     * @param actionEvent button click on action.
+     */
     public void collegeCheckingButtonAction(ActionEvent actionEvent) {
         newarkButton.setVisible(true);
         nbButton.setVisible(true);
@@ -314,6 +324,10 @@ public class TransactionManagerController {
         loyalCheckBox.setVisible(false);
     }
 
+    /**
+     * Method to make campus buttons invisible on money market selected.
+     * @param actionEvent button click on action.
+     */
     public void moneyMarketButtonAction(ActionEvent actionEvent) {
         newarkButton.setVisible(false);
         nbButton.setVisible(false);
@@ -321,6 +335,10 @@ public class TransactionManagerController {
         loyalCheckBox.setVisible(false);
     }
 
+    /**
+     * Method to make campus buttons invisible on savings selected.
+     * @param actionEvent button click on action.
+     */
     public void savingsButtonAction(ActionEvent actionEvent) {
         newarkButton.setVisible(false);
         nbButton.setVisible(false);
@@ -328,6 +346,10 @@ public class TransactionManagerController {
         loyalCheckBox.setVisible(true);
     }
 
+    /**
+     * Method to make campus buttons invisible on checking selected.
+     * @param actionEvent button click on action.
+     */
     public void checkingButtonAction(ActionEvent actionEvent) {
         newarkButton.setVisible(false);
         nbButton.setVisible(false);
@@ -336,6 +358,10 @@ public class TransactionManagerController {
     }
 
     //DEPOSIT / WITHDRAW TAB
+    /**
+     * Method to process amount withdraw action.
+     * @param actionEvent button click on action.
+     */
     public void dwDepositButtonAction(ActionEvent actionEvent) {
         String firstName = dwFirstNameTextField.getText();
         String lastName = dwLastNameTextField.getText();
@@ -377,6 +403,15 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Helper method to finish amount deposit action.
+     * @param ad account database to be selected.
+     * @param acc account to be deposited from.
+     * @param type type of account.
+     * @param prof profile for the account.
+     * @param amountDouble amount to be deposited.
+     * @param accountType type of account.
+     */
     private void depositCommandFinisher(AccountDatabase ad, Account acc, String type, Profile prof, Double amountDouble, String accountType) {
         if (ad.containsForClose(acc, type) == null) {
             dCommandErrorPrinter(prof, accountType);
@@ -394,12 +429,21 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to print errors for depositing amount.
+     * @param prof profile for the account.
+     * @param accountType type of the account.
+     */
     private void dCommandErrorPrinter(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " +
                 prof.getDOB() + "(" + accountType + ") is not in the database.";
         mainTextArea.appendText(err);
     }
 
+    /**
+     * Method to process the withdrawal amount action.
+     * @param actionEvent button on click action.
+     */
     public void dwWithdrawButtonAction(ActionEvent actionEvent) {
         String firstName = dwFirstNameTextField.getText();
         String lastName = dwLastNameTextField.getText();
@@ -442,6 +486,14 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Final helper method to process withdrawal amount action.
+     * @param acc account to be deposited from.
+     * @param prof profile for the account.
+     * @param type type of account.
+     * @param accountType type of account.
+     * @param amountDouble amount to be deposited.
+     */
     private void wCommandFinisher(Account acc, Profile prof, String type, String accountType, Double amountDouble) {
         if (ad.containsForClose(acc, type) == null) {
             wCommandErrorPrinter(prof, accountType);
@@ -467,6 +519,11 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to process error cases with amount withdrawal.
+     * @param prof profile for the account.
+     * @param accountType type of account.
+     */
     private void wCommandFinalErrorHandler(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " +
                 prof.getDOB() + "(" + accountType +
@@ -474,6 +531,11 @@ public class TransactionManagerController {
         mainTextArea.appendText(err);
     }
 
+    /**
+     * Additional processing for account withdrawal command errors.
+     * @param prof profile for the account.
+     * @param accountType type of account.
+     */
     private void wCommandErrorPrinter(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " +
                 prof.getDOB() + "(" + accountType +
@@ -483,6 +545,10 @@ public class TransactionManagerController {
     //END OF DEPOSIT / WITHDRAW TAB
 
     //BEGIN OF ACCOUNT DATABASE TAB
+    /**
+     * Method to print all accounts sorted.
+     * @param actionEvent button on click action.
+     */
     public void adPrintAllAccountsAction(ActionEvent actionEvent) {
         if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
@@ -492,6 +558,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to print all accounts sorted with fees.
+     * @param actionEvent button on click action.
+     */
     public void adPrintInterestAndFeesAction(ActionEvent actionEvent) {
         if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
@@ -501,6 +571,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to check for empty database when printing.
+     * @param actionEvent button on click action.
+     */
     public void adUpdatesAction(ActionEvent actionEvent) {
         if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
@@ -510,6 +584,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to import file and add accounts.
+     * @param actionEvent file selector on action.
+     */
     public void loadFromFileAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
@@ -551,6 +629,13 @@ public class TransactionManagerController {
         mainTextArea.appendText("Accounts loaded.\n");
     }
 
+    /**
+     * Helper method to process file contents and add accounts.
+     * @param parts text file line to be processed.
+     * @param amountDouble amount to be deposited.
+     * @param prof profile to be added.
+     * @return new account that will be added to account database.
+     */
     private Account loadCommandHelper(String[] parts, Double amountDouble, Profile prof) {
         if (parts[0].equals("CC")) {
             CampusCode campusCode = null;
@@ -578,11 +663,15 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Method to process invalid date entered
+     * @param actionEvent
+     */
     public void datePickerAction(ActionEvent actionEvent) {
         try {
             datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MMM-dd"));
         } catch (Exception e) {
-            System.out.println("WE HAVE CAUGHT AN EXCEPTION!\n");
+            mainTextArea.appendText("INVALID DATE ENTERED\n");
         }
     }
     //END OF ACCOUNT DATABASE TAB
