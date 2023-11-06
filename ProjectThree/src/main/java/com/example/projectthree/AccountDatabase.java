@@ -1,5 +1,8 @@
 package com.example.projectthree;
 
+import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
+
 import java.text.DecimalFormat;
 
 /**
@@ -130,6 +133,9 @@ public class AccountDatabase {
      */
     public boolean withdraw(Account account) {
         for (int i = 0; i < this.accounts.length; i++) {
+            if(this.accounts[i] == null){
+                continue;
+            }
             if (this.accounts[i].equals(account)) {
                 double currBal = account.getBalance();
                 if (currBal - account.getBalance() < 0) {
@@ -163,9 +169,9 @@ public class AccountDatabase {
      * Goes in order of: Checking, College Checking, Money Market, Savings.
      * For similar account types, compare last name, then first name.
      */
-    public void printSorted() {
-        System.out.println();
-        System.out.println("*Accounts sorted by account type and profile.");
+    public void printSorted(TextArea mainTextArea) {
+        mainTextArea.appendText("\n");
+        mainTextArea.appendText("*Accounts sorted by account type and profile.\n");
 
         insertionSortDefault(this.accounts);
 
@@ -173,19 +179,20 @@ public class AccountDatabase {
             if (this.accounts[x] == null) {
                 break;
             }
-            System.out.println(this.accounts[x].toString());
+            mainTextArea.appendText(this.accounts[x].toString());
+            mainTextArea.appendText("\n");
         }
-        System.out.println("*end of list.");
-        System.out.println();
+        mainTextArea.appendText("*end of list.\n");
+        mainTextArea.appendText("\n");
     }
 
     /**
      * Print accounts from account array with what their interests/fees would be.
      * Follows sorted order of Checking, College Checking, Money Market, then Savings.
      */
-    public void printFeesAndInterests() {
-        System.out.println();
-        System.out.println("*list of accounts with fee and monthly interest");
+    public void printFeesAndInterests(TextArea mainTextArea) {
+        mainTextArea.appendText("\n");
+        mainTextArea.appendText("*list of accounts with fee and monthly interest\n");
         DecimalFormat df = new DecimalFormat("#,###.00");
 
         insertionSortFeesAndInterest(this.accounts);
@@ -197,38 +204,38 @@ public class AccountDatabase {
             double interest = (this.accounts[x].getBalance()
                     * this.accounts[x].monthlyInterest()) / 12;
             if(this.accounts[x].monthlyFee() < 1 && interest < 1) {
-                System.out.println(this.accounts[x].toString() + "::fee $" +
+                mainTextArea.appendText(this.accounts[x].toString() + "::fee $" +
                         "0" + df.format(this.accounts[x].monthlyFee()) +
-                        "::monthly interest $" + "0" + df.format(interest));
+                        "::monthly interest $" + "0" + df.format(interest) + "\n");
             }
             else if(this.accounts[x].monthlyFee() < 1) {
-                System.out.println(this.accounts[x].toString() + "::fee $" +
+                mainTextArea.appendText(this.accounts[x].toString() + "::fee $" +
                         "0" + df.format(this.accounts[x].monthlyFee()) +
-                        "::monthly interest $" + df.format(interest));
+                        "::monthly interest $" + df.format(interest) + "\n");
             }
             else if(interest < 1) {
-                System.out.println(this.accounts[x].toString() + "::fee $" +
+                mainTextArea.appendText(this.accounts[x].toString() + "::fee $" +
                         df.format(this.accounts[x].monthlyFee()) +
-                        "::monthly interest $" + "0" + df.format(interest));
+                        "::monthly interest $" + "0" + df.format(interest) + "\n");
             }
             else {
-                System.out.println(this.accounts[x].toString() + "::fee $" +
+                mainTextArea.appendText(this.accounts[x].toString() + "::fee $" +
                         df.format(this.accounts[x].monthlyFee()) +
-                        "::monthly interest $" + df.format(interest));
+                        "::monthly interest $" + df.format(interest) + "\n");
             }
         }
-        System.out.println("*end of list.");
-        System.out.println();
+        mainTextArea.appendText("*end of list.\n");
+        mainTextArea.appendText("\n");
     }
 
     /**
      * Print accounts from account array with their actual updated interests/fees/balance.
      * Follows sorted order of Checking, College Checking, Money Market, then Savings.
      */
-    public void printUpdatedBalances() {
-        System.out.println();
-        System.out.println("*list of accounts with fees and " +
-                "interests applied.");
+    public void printUpdatedBalances(TextArea mainTextArea) {
+        mainTextArea.appendText("\n");
+        mainTextArea.appendText("*list of accounts with fees and " +
+                "interests applied.\n");
         for (int x = 0; x < this.accounts.length; x++) {
             if (this.accounts[x] == null) {
                 break;
@@ -250,10 +257,10 @@ public class AccountDatabase {
             if (this.accounts[x].returnType().equals("Money Market")) {
                 ((MoneyMarket) this.accounts[x]).resetWithdrawal();
             }
-            System.out.println(this.accounts[x].toString());
+            mainTextArea.appendText(this.accounts[x].toString() + "\n");
         }
-        System.out.println("*end of list.");
-        System.out.println();
+        mainTextArea.appendText("*end of list.\n");
+        mainTextArea.appendText("\n");
     }
 
     /**

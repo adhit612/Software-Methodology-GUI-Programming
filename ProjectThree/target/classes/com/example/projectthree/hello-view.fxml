@@ -9,39 +9,80 @@
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
    <children>
-      <TabPane prefHeight="500.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="287.0" prefWidth="460.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Open/Close">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label fx:id="firstName" layoutX="102.0" layoutY="41.0" text="First Name" />
-                        <Label fx:id="lastName" layoutX="102.0" layoutY="83.0" text="Last Name" />
-                        <Label fx:id="dob" layoutX="102.0" layoutY="130.0" text="Date of Birth" />
-                        <TextField fx:id="field1" layoutX="184.0" layoutY="38.0" onAction="#firstNameAction" />
-                        <TextField layoutX="184.0" layoutY="79.0" />
-                        <DatePicker layoutX="184.0" layoutY="126.0" />
+                        <Label id="FirstName" fx:id="firstName" layoutX="101.0" layoutY="18.0" text="First Name" />
+                        <Label id="LastName" fx:id="lastName" layoutX="102.0" layoutY="50.0" text="Last Name" />
+                        <Label id="DateOfBirth" fx:id="dob" layoutX="102.0" layoutY="88.0" text="Date of Birth" />
+                        <TextField id="FirstNameTextField" fx:id="firstNameTextField" layoutX="183.0" layoutY="14.0" />
+                        <TextField id="LastNameTextField" fx:id="lastNameTextField" layoutX="183.0" layoutY="46.0" />
+                        <DatePicker id="DatePicker" fx:id="datePicker" layoutX="185.0" layoutY="84.0" />
+                        <Label id="AccountTypeLabel" layoutX="18.0" layoutY="142.0" prefHeight="17.0" prefWidth="83.0" text="Account Type" />
+                        <RadioButton id="MoneyMarketButton" fx:id="moneyMarketButton" layoutX="109.0" layoutY="185.0" mnemonicParsing="false" onAction="#moneyMarketButtonAction" text="Money Market">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="AccountTypes" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton id="SavingsButton" fx:id="savingsButton" layoutX="113.0" layoutY="159.0" mnemonicParsing="false" onAction="#savingsButtonAction" text="Savings" toggleGroup="$AccountTypes" />
+                        <RadioButton id="CheckingButton" fx:id="checkingButton" layoutX="109.0" layoutY="142.0" mnemonicParsing="false" onAction="#checkingButtonAction" text="Checking" toggleGroup="$AccountTypes" />
+                        <RadioButton id="CollegeCheckingButton" fx:id="collegeCheckingButton" layoutX="109.0" layoutY="118.0" mnemonicParsing="false" onAction="#collegeCheckingButtonAction" prefHeight="26.0" prefWidth="146.0" text="College Checking" toggleGroup="$AccountTypes" />
+                        <RadioButton id="NewarkButton" fx:id="newarkButton" layoutX="329.0" layoutY="151.0" mnemonicParsing="false" text="Newark" visible="false">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="CampusCodes" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton id="NBButton" fx:id="nbButton" layoutX="327.0" layoutY="122.0" mnemonicParsing="false" text="NB" toggleGroup="$CampusCodes" visible="false" />
+                        <RadioButton id="CamdenButton" fx:id="camdenButton" layoutX="327.0" layoutY="177.0" mnemonicParsing="false" text="Camden" toggleGroup="$CampusCodes" visible="false" />
+                        <CheckBox id="LoyalCheckBox" fx:id="loyalCheckBox" layoutX="327.0" layoutY="205.0" mnemonicParsing="false" text="Loyal Customer" visible="false" />
+                        <Button id="OpenButton" layoutX="18.0" layoutY="222.0" mnemonicParsing="false" onAction="#openButtonAction" text="Open" />
+                        <TextField id="AmountTextField" fx:id="amountTextField" layoutX="197.0" layoutY="222.0" />
+                        <Label layoutX="153.0" layoutY="226.0" text="Amount" />
+                        <Button id="CloseButton" fx:id="closeButton" layoutX="78.0" layoutY="222.0" mnemonicParsing="false" onAction="#closeButtonAction" text="Close" />
                      </children>
               </AnchorPane>
             </content>
           </Tab>
           <Tab text="Deposit/Withdraw">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField id="DWFirstNameTextField" fx:id="dwFirstNameTextField" layoutX="76.0" layoutY="23.0" />
+                        <Label id="DWFirstNameLabel" layoutX="14.0" layoutY="27.0" text="First Name" />
+                        <Label id="DWLastNameLabel" layoutX="15.0" layoutY="72.0" text="Last Name" />
+                        <TextField id="DWLastNameTextField" fx:id="dwLastNameTextField" layoutX="76.0" layoutY="68.0" />
+                        <RadioButton id="DWCheckingButton" fx:id="dwCheckingButton" layoutX="145.0" layoutY="121.0" mnemonicParsing="false" text="Checking">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="DWAccountTypes" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton id="DWSavingsButton" fx:id="dwSavingsButton" layoutX="145.0" layoutY="153.0" mnemonicParsing="false" text="Savings" toggleGroup="$DWAccountTypes" />
+                        <RadioButton id="DWCollegeCheckingButton" fx:id="dwCollegeCheckingButton" layoutX="251.0" layoutY="121.0" mnemonicParsing="false" text="College Checking" toggleGroup="$DWAccountTypes" />
+                        <RadioButton id="DWMoneyMarketButton" fx:id="dwMoneyMarketButton" layoutX="251.0" layoutY="153.0" mnemonicParsing="false" text="Money Market" toggleGroup="$DWAccountTypes" />
+                        <Label id="DWAccountTypeLabel" layoutX="54.0" layoutY="138.0" text="Account Type" />
+                        <TextField id="DWAmountTextField" fx:id="dwAmountTextField" layoutX="145.0" layoutY="184.0" />
+                        <Label id="DWAmountLabel" layoutX="99.0" layoutY="188.0" text="Amount" />
+                        <Button id="DWDepositButton" fx:id="dwDepositButton" layoutX="76.0" layoutY="219.0" mnemonicParsing="false" onAction="#dwDepositButtonAction" text="Deposit" />
+                        <Button id="DWWithdrawButton" fx:id="dwWithdrawButton" layoutX="301.0" layoutY="219.0" mnemonicParsing="false" onAction="#dwWithdrawButtonAction" text="Withdraw" />
+                        <DatePicker id="dwDatePicker" fx:id="dwDatePicker" layoutX="282.0" layoutY="44.0" />
+                        <Label id="dwDateOfBirthLabel" layoutX="286.0" layoutY="27.0" text="Date of Birth" />
+                     </children></AnchorPane>
             </content>
           </Tab>
           <Tab text="Account Database">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-          <Tab text="Demo MenuBar">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button id="ADLoadFromFile" fx:id="adLoadFromFile" layoutX="60.0" layoutY="64.0" mnemonicParsing="false" text="Load Accounts From File" onAction="#loadFromFileAction"/>
+                        <Button id="ADPrintAllAccounts" fx:id="adPrintAllAccounts" layoutX="66.0" layoutY="18.0" mnemonicParsing="false" text="Print All Accounts" onAction="#adPrintAllAccountsAction"/>
+                        <Button id="ADPrintInterestAndFees" fx:id="adPrintInterestAndFees" layoutX="54.0" layoutY="116.0" mnemonicParsing="false" text="Print Interest and Fees" onAction="#adPrintInterestAndFeesAction"/>
+                        <Button id="ADUpdateWithInterestsAndFees" fx:id="adUpdateWithInterestsAndFees" layoutX="60.0" layoutY="166.0" mnemonicParsing="false" text="Update Accounts with Interests and Fees" onAction="#adUpdatesAction" />
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
+      <TextArea id="MainTextArea" fx:id="mainTextArea" prefHeight="147.0" prefWidth="460.0" />
    </children>
 
 </VBox>

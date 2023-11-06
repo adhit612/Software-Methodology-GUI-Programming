@@ -41,10 +41,10 @@ public class Date implements Comparable<Date> {
      * @param date input calendar date string.
      */
     public Date(String date) {
-        String[] parts = date.split("/");
-        this.year = Integer.parseInt(parts[2]);
-        this.month = Integer.parseInt(parts[0]) - 1;
-        this.day = Integer.parseInt(parts[1]);
+        String[] parts = date.split("-");
+        this.year = Integer.parseInt(parts[0]);
+        this.month = Integer.parseInt(parts[1]) - 1;
+        this.day = Integer.parseInt(parts[2]);
     }
 
     /**

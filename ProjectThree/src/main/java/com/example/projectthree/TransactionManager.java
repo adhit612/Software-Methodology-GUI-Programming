@@ -499,7 +499,7 @@ public class TransactionManager {
             oCommand(contents,collection,ad);
         }
         else if (contents[0].equals("P")) {
-            ad.printSorted();
+            //ad.printSorted();
         }
         else if (contents[0].equals("C")) {
             cCommand(contents,collection,ad);
@@ -511,10 +511,10 @@ public class TransactionManager {
             wCommand(contents,collection,ad);
         }
         else if (contents[0].equals("PI")) {
-            ad.printFeesAndInterests();
+           //ad.printFeesAndInterests();
         }
         else if (contents[0].equals("UB")) {
-            ad.printUpdatedBalances();
+            //ad.printUpdatedBalances();
         }
     }
 
