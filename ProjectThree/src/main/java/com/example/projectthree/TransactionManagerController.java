@@ -7,22 +7,13 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.time.DateTimeException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.awt.Desktop;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
-public class HelloController {
+public class TransactionManagerController {
     @FXML
     private TextArea mainTextArea;
 
@@ -228,7 +219,11 @@ public class HelloController {
         }
         int age = 2023 - date.getYear();
         int dayDiff = date.getDay() - date.getTodaysDate();
-
+        if (age <= MIN_AGE) {
+            String str = "DOB invalid: " + date + " under 16.\n";
+            mainTextArea.appendText(str);
+            return;
+        }
         if (age <= MIN_AGE && dayDiff >= 0) {
             String str = "DOB invalid: " + date + " under 16.\n";
             mainTextArea.appendText(str);
@@ -243,7 +238,7 @@ public class HelloController {
             account = new Checking(res, prof);
         }
         else if (accountType.equals("College Checking")) {
-            if (age >= MAX_AGE && (date.getDay() - date.getTodaysDate() < 0)) {
+            if (age >= MAX_AGE) {
                 String err = "DOB invalid: " + date.toString() + " over 24.\n";
                 mainTextArea.appendText(err);
                 return;
@@ -296,12 +291,18 @@ public class HelloController {
 
     private void oCommandFinalCheck(AccountDatabase ad, Account account, String accountType) {
         if (ad.contains(account)) {
-            String res = account.getProfile().getFname() + " " + account.getProfile().getLname() + " " + account.getProfile().getDOB() + "(" + accountType + ") is already in the database.\n";
+            String res = account.getProfile().getFname() + " " +
+                    account.getProfile().getLname() +
+                    " " + account.getProfile().getDOB() + "(" + accountType +
+                    ") is already in the database.\n";
             mainTextArea.appendText(res);
         }
         else {
             ad.open(account);
-            String res = account.getProfile().getFname() + " " + account.getProfile().getLname() + " " + account.getProfile().getDOB() + "(" + accountType + ") opened.\n";
+            String res = account.getProfile().getFname() + " " +
+                    account.getProfile().getLname() +
+                    " " + account.getProfile().getDOB() + "(" +
+                    accountType + ") opened.\n";
             mainTextArea.appendText(res);
         }
     }
@@ -386,13 +387,16 @@ public class HelloController {
             balance += amountDouble;
             account.setBalance(balance);
             ad.deposit(account);
-            String succMess = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Deposit - balance updated.\n";
+            String succMess = prof.getFname() + " " + prof.getLname() +
+                    " " + prof.getDOB() + "(" + accountType +
+                    ") Deposit - balance updated.\n";
             mainTextArea.appendText(succMess);
         }
     }
 
     private void dCommandErrorPrinter(Profile prof, String accountType) {
-        String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.";
+        String err = prof.getFname() + " " + prof.getLname() + " " +
+                prof.getDOB() + "(" + accountType + ") is not in the database.";
         mainTextArea.appendText(err);
     }
 
@@ -426,7 +430,8 @@ public class HelloController {
             }
 
             if (amountDouble <= 0) {
-                mainTextArea.appendText("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
+                mainTextArea.appendText
+                        ("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
                 return;
             }
 
@@ -454,19 +459,25 @@ public class HelloController {
                 if (accountType.equals("Money Market")) {
                     ((MoneyMarket) account).setWithdrawal();
                 }
-                String finalWithdrawMessage = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - balance updated.\n";
+                String finalWithdrawMessage = prof.getFname() + " " +
+                        prof.getLname() + " " + prof.getDOB() + "(" +
+                        accountType + ") Withdraw - balance updated.\n";
                 mainTextArea.appendText(finalWithdrawMessage);
             }
         }
     }
 
     private void wCommandFinalErrorHandler(Profile prof, String accountType) {
-        String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - insufficient fund.\n";
+        String err = prof.getFname() + " " + prof.getLname() + " " +
+                prof.getDOB() + "(" + accountType +
+                ") Withdraw - insufficient fund.\n";
         mainTextArea.appendText(err);
     }
 
     private void wCommandErrorPrinter(Profile prof, String accountType) {
-        String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
+        String err = prof.getFname() + " " + prof.getLname() + " " +
+                prof.getDOB() + "(" + accountType +
+                ") is not in the database.\n";
         mainTextArea.appendText(err);
     }
     //END OF DEPOSIT / WITHDRAW TAB
