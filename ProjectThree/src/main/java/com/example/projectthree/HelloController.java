@@ -124,7 +124,7 @@ public class HelloController {
     //END OF ACCOUNT DATABASE
 
     //Account storage variables
-    private Account [] collection = new Account[4];
+    private Account[] collection = new Account[4];
 
     AccountDatabase ad = new AccountDatabase(collection, 0);
 
@@ -139,7 +139,7 @@ public class HelloController {
         String firstName = firstNameTextField.getText();
         String lastName = lastNameTextField.getText();
         String convDate = "";
-        if(datePicker.getValue() == null){
+        if (datePicker.getValue() == null) {
             mainTextArea.appendText("PLEASE ENTER A DATE\n");
             return;
         }
@@ -147,11 +147,11 @@ public class HelloController {
             convDate = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
 
-        RadioButton selectedAccount = (RadioButton)AccountTypes.getSelectedToggle();
-        if(firstName.isEmpty() || lastName.isEmpty() || selectedAccount == null){
+        RadioButton selectedAccount = (RadioButton) AccountTypes.getSelectedToggle();
+        if (firstName.isEmpty() || lastName.isEmpty() || selectedAccount == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
         }
-        else{
+        else {
             String accountType = selectedAccount.getText();
             Profile prof = new Profile(firstName, lastName, new Date(convDate));
             Date date = new Date(convDate);
@@ -159,14 +159,14 @@ public class HelloController {
                 String err = "DOB invalid: " + date.toString() + " cannot be today or a future day.";
                 mainTextArea.appendText(err);
             }
-            else{
+            else {
                 Account ac = new Checking(prof);
                 String type = accountType;
                 if (ad.containsForClose(ac, type) == null) {
                     String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
                     mainTextArea.appendText(err);
                 }
-                else{
+                else {
                     ad.close(ad.containsForClose(ac, type));
                     String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") has been closed.\n";
                     mainTextArea.appendText(err);
@@ -180,7 +180,7 @@ public class HelloController {
         String lastName = lastNameTextField.getText();
         String date = "";
         String amountStr = amountTextField.getText();
-        if(datePicker.getValue() == null){
+        if (datePicker.getValue() == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
             return;
         }
@@ -188,8 +188,8 @@ public class HelloController {
             date = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
 
-        RadioButton selectedAccount = (RadioButton)AccountTypes.getSelectedToggle();
-        if(firstName.isEmpty() || lastName.isEmpty() || selectedAccount == null || amountStr.isEmpty()){
+        RadioButton selectedAccount = (RadioButton) AccountTypes.getSelectedToggle();
+        if (firstName.isEmpty() || lastName.isEmpty() || selectedAccount == null || amountStr.isEmpty()) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
         }
         else {
@@ -198,23 +198,22 @@ public class HelloController {
             double amountDouble = 0.0;
             try {
                 amountDouble = decimalFormat.parse(amountStr).doubleValue();
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 mainTextArea.appendText("PLEASE ENTER A VALID AMOUNT\n");
                 e.printStackTrace();
                 return;
             }
 
-            if(amountDouble <= 0){
+            if (amountDouble <= 0) {
                 mainTextArea.appendText("INITIAL AMOUNT CANNOT BE 0 OR NEGATIVE\n");
                 return;
             }
 
-            oCommandHelper(firstName,lastName,date,collection,ad,decimalFormat,amountDouble,accountType);
+            oCommandHelper(firstName, lastName, date, collection, ad, decimalFormat, amountDouble, accountType);
         }
     }
 
-    private void oCommandHelper(String firstName, String lastName, String dob, Account [] collection, AccountDatabase ad, DecimalFormat decimalFormat, double amount, String accountType){
+    private void oCommandHelper(String firstName, String lastName, String dob, Account[] collection, AccountDatabase ad, DecimalFormat decimalFormat, double amount, String accountType) {
         Profile prof = new Profile(firstName, lastName, new Date(dob));
         Date date = new Date(dob);
         if (!date.isValid()) {
@@ -230,15 +229,15 @@ public class HelloController {
         int age = 2023 - date.getYear();
         int dayDiff = date.getDay() - date.getTodaysDate();
 
-        if (age <= MIN_AGE && dayDiff >= 0){
+        if (age <= MIN_AGE && dayDiff >= 0) {
             String str = "DOB invalid: " + date + " under 16.\n";
             mainTextArea.appendText(str);
             return;
         }
-        oCommandHelperTwo(accountType,collection,ad,amount,prof,date,age);
+        oCommandHelperTwo(accountType, collection, ad, amount, prof, date, age);
     }
 
-    private void oCommandHelperTwo(String accountType, Account [] collection, AccountDatabase ad, double res, Profile prof, Date date, int age){
+    private void oCommandHelperTwo(String accountType, Account[] collection, AccountDatabase ad, double res, Profile prof, Date date, int age) {
         Account account = null;
         if (accountType.equals("Checking")) {
             account = new Checking(res, prof);
@@ -250,9 +249,9 @@ public class HelloController {
                 return;
             }
             CampusCode campusCode = null;
-            RadioButton selectedCampus = (RadioButton)CampusCodes.getSelectedToggle();
+            RadioButton selectedCampus = (RadioButton) CampusCodes.getSelectedToggle();
             String campusC = selectedCampus.getText();
-            if(campusC.isEmpty()){
+            if (campusC.isEmpty()) {
                 String err = "Please select campus code\n";
                 mainTextArea.appendText(err);
                 return;
@@ -267,20 +266,20 @@ public class HelloController {
             }
             account = new Savings(res, isLoyal, prof);
         }
-        else{
+        else {
             if (res < MM_LIMIT) {
                 String err = "Minimum of $2000 to open a Money Market account.\n";
                 mainTextArea.appendText(err);
                 return;
             }
-            else{
+            else {
                 account = new MoneyMarket(res, true, 0, prof);
             }
         }
-        oCommandFinalCheck(ad,account,accountType);
+        oCommandFinalCheck(ad, account, accountType);
     }
 
-    private CampusCode oCommandSetCampusCode(String campusC){
+    private CampusCode oCommandSetCampusCode(String campusC) {
         if (campusC.equals("NB")) {
             return CampusCode.ZERO;
         }
@@ -290,12 +289,12 @@ public class HelloController {
         else if (campusC.equals("Camden")) {
             return CampusCode.TWO;
         }
-        else{
+        else {
             return null;
         }
     }
 
-    private void oCommandFinalCheck(AccountDatabase ad, Account account, String accountType){
+    private void oCommandFinalCheck(AccountDatabase ad, Account account, String accountType) {
         if (ad.contains(account)) {
             String res = account.getProfile().getFname() + " " + account.getProfile().getLname() + " " + account.getProfile().getDOB() + "(" + accountType + ") is already in the database.\n";
             mainTextArea.appendText(res);
@@ -341,7 +340,7 @@ public class HelloController {
         String lastName = dwLastNameTextField.getText();
         String date = "";
         String amountStr = dwAmountTextField.getText();
-        if(dwDatePicker.getValue() == null){
+        if (dwDatePicker.getValue() == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
             return;
         }
@@ -349,24 +348,23 @@ public class HelloController {
             date = dwDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
 
-        RadioButton selectedAccount = (RadioButton)DWAccountTypes.getSelectedToggle();
-        if(firstName.isEmpty() || lastName.isEmpty() || amountStr.isEmpty() || selectedAccount == null){
+        RadioButton selectedAccount = (RadioButton) DWAccountTypes.getSelectedToggle();
+        if (firstName.isEmpty() || lastName.isEmpty() || amountStr.isEmpty() || selectedAccount == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
         }
-        else{
+        else {
             String accountType = selectedAccount.getText();
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             double amountDouble = 0.0;
             try {
                 amountDouble = decimalFormat.parse(amountStr).doubleValue();
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 mainTextArea.appendText("ENTER IN VALID AMOUNT\n");
                 e.printStackTrace();
                 return;
             }
 
-            if(amountDouble <= 0){
+            if (amountDouble <= 0) {
                 mainTextArea.appendText("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
                 return;
             }
@@ -374,15 +372,15 @@ public class HelloController {
             Profile prof = new Profile(firstName, lastName, new Date(date));
             String type = accountType;
             Account acc = new Checking(prof);
-            depositCommandFinisher(ad,acc,type,prof,amountDouble,accountType);
+            depositCommandFinisher(ad, acc, type, prof, amountDouble, accountType);
         }
     }
 
-    private void depositCommandFinisher(AccountDatabase ad,Account acc,String type,Profile prof,Double amountDouble, String accountType){
+    private void depositCommandFinisher(AccountDatabase ad, Account acc, String type, Profile prof, Double amountDouble, String accountType) {
         if (ad.containsForClose(acc, type) == null) {
-            dCommandErrorPrinter(prof,accountType);
+            dCommandErrorPrinter(prof, accountType);
         }
-        else{
+        else {
             Account account = ad.containsForClose(acc, type);
             double balance = account.getBalance();
             balance += amountDouble;
@@ -393,7 +391,7 @@ public class HelloController {
         }
     }
 
-    private void dCommandErrorPrinter(Profile prof, String accountType){
+    private void dCommandErrorPrinter(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.";
         mainTextArea.appendText(err);
     }
@@ -403,7 +401,7 @@ public class HelloController {
         String lastName = dwLastNameTextField.getText();
         String date = "";
         String amountStr = dwAmountTextField.getText();
-        if(dwDatePicker.getValue() == null){
+        if (dwDatePicker.getValue() == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
             return;
         }
@@ -411,24 +409,23 @@ public class HelloController {
             date = dwDatePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
 
-        RadioButton selectedAccount = (RadioButton)DWAccountTypes.getSelectedToggle();
-        if(firstName.isEmpty() || lastName.isEmpty() || amountStr.isEmpty() || selectedAccount == null){
+        RadioButton selectedAccount = (RadioButton) DWAccountTypes.getSelectedToggle();
+        if (firstName.isEmpty() || lastName.isEmpty() || amountStr.isEmpty() || selectedAccount == null) {
             mainTextArea.appendText("NOT ALL NEEDED DATA HAS BEEN ENTERED\n");
         }
-        else{
+        else {
             String accountType = selectedAccount.getText();
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             double amountDouble = 0.0;
             try {
                 amountDouble = decimalFormat.parse(amountStr).doubleValue();
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 mainTextArea.appendText("ENTER IN VALID AMOUNT\n");
                 e.printStackTrace();
                 return;
             }
 
-            if(amountDouble <= 0){
+            if (amountDouble <= 0) {
                 mainTextArea.appendText("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
                 return;
             }
@@ -436,26 +433,25 @@ public class HelloController {
             Profile prof = new Profile(firstName, lastName, new Date(date));
             String type = accountType;
             Account acc = new Checking(prof);
-            wCommandFinisher(acc,prof,type,accountType,amountDouble);
+            wCommandFinisher(acc, prof, type, accountType, amountDouble);
         }
     }
 
-    private void wCommandFinisher(Account acc, Profile prof, String type, String accountType,Double amountDouble){
+    private void wCommandFinisher(Account acc, Profile prof, String type, String accountType, Double amountDouble) {
         if (ad.containsForClose(acc, type) == null) {
-            wCommandErrorPrinter(prof,accountType);
+            wCommandErrorPrinter(prof, accountType);
         }
-        else{
-            mainTextArea.appendText("IN ELSE 2\n");
+        else {
             Account account = ad.containsForClose(acc, type);
             double balance = account.getBalance();
             if (balance - amountDouble < 0) {
-                wCommandFinalErrorHandler(prof,accountType);
+                wCommandFinalErrorHandler(prof, accountType);
             }
-            else{
+            else {
                 balance -= amountDouble;
                 account.setBalance(balance);
                 ad.withdraw(account);
-                if(accountType.equals("Money Market")){
+                if (accountType.equals("Money Market")) {
                     ((MoneyMarket) account).setWithdrawal();
                 }
                 String finalWithdrawMessage = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - balance updated.\n";
@@ -464,12 +460,12 @@ public class HelloController {
         }
     }
 
-    private void wCommandFinalErrorHandler(Profile prof, String accountType){
-       String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - insufficient fund.\n";
-       mainTextArea.appendText(err);
+    private void wCommandFinalErrorHandler(Profile prof, String accountType) {
+        String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - insufficient fund.\n";
+        mainTextArea.appendText(err);
     }
 
-    private void wCommandErrorPrinter(Profile prof, String accountType){
+    private void wCommandErrorPrinter(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
         mainTextArea.appendText(err);
     }
@@ -477,7 +473,7 @@ public class HelloController {
 
     //BEGIN OF ACCOUNT DATABASE TAB
     public void adPrintAllAccountsAction(ActionEvent actionEvent) {
-        if(ad.getNumAcct() == 0){
+        if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
         }
         else {
@@ -486,7 +482,7 @@ public class HelloController {
     }
 
     public void adPrintInterestAndFeesAction(ActionEvent actionEvent) {
-        if(ad.getNumAcct() == 0){
+        if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
         }
         else {
@@ -495,7 +491,7 @@ public class HelloController {
     }
 
     public void adUpdatesAction(ActionEvent actionEvent) {
-        if(ad.getNumAcct() == 0){
+        if (ad.getNumAcct() == 0) {
             mainTextArea.appendText("Account Database is empty\n");
         }
         else {
@@ -506,75 +502,75 @@ public class HelloController {
     public void loadFromFileAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
-        ArrayList <String> contents = new ArrayList<String>();
-        try(Scanner scanner = new Scanner(selectedFile)){
-            while(scanner.hasNext()){
+        ArrayList<String> contents = new ArrayList<String>();
+        try (Scanner scanner = new Scanner(selectedFile)) {
+            while (scanner.hasNext()) {
                 contents.add(scanner.next());
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             mainTextArea.appendText("No file selected\n");
             return;
         }
-        for(int i = 0; i < contents.size(); i ++){
+        for (int i = 0; i < contents.size(); i++) {
             Account account = null;
-            String [] parts = contents.get(i).split(",");
+            String[] parts = contents.get(i).split(",");
             String firstName = parts[1];
             String lastName = parts[2];
             String date = parts[3];
-            String [] dateSplit = date.split("/");
+            String[] dateSplit = date.split("/");
             String dateFin = "";
-            dateFin += dateSplit[2];dateFin += "-";dateFin += dateSplit[1];
-            dateFin += "-";dateFin += dateSplit[0];
-            Profile prof = new Profile(firstName,lastName,new Date(dateFin));
+            dateFin += dateSplit[2];
+            dateFin += "-";
+            dateFin += dateSplit[0];
+            dateFin += "-";
+            dateFin += dateSplit[1];
+            Profile prof = new Profile(firstName, lastName, new Date(dateFin));
             String amountStr = parts[4];
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             double amountDouble = 0.0;
             try {
                 amountDouble = decimalFormat.parse(amountStr).doubleValue();
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 e.printStackTrace();
                 return;
             }
-            account = loadCommandHelper(parts,amountDouble,prof);
+            account = loadCommandHelper(parts, amountDouble, prof);
             ad.open(account);
         }
         mainTextArea.appendText("Accounts loaded.\n");
     }
 
-    private Account loadCommandHelper(String [] parts, Double amountDouble, Profile prof){
-        if(parts[0].equals("CC")){
+    private Account loadCommandHelper(String[] parts, Double amountDouble, Profile prof) {
+        if (parts[0].equals("CC")) {
             CampusCode campusCode = null;
-            if(parts[5].equals("0")){
+            if (parts[5].equals("0")) {
                 campusCode = CampusCode.ZERO;
-            }
-            else if(parts[5].equals("1")){
+            } else if (parts[5].equals("1")) {
                 campusCode = CampusCode.ONE;
-            }
-            else{
+            } else {
                 campusCode = CampusCode.TWO;
             }
-            return new CollegeChecking(amountDouble,campusCode,prof);
+            return new CollegeChecking(amountDouble, campusCode, prof);
         }
-        else if(parts[0].equals("S")){
+        else if (parts[0].equals("S")) {
             boolean isLoyal = false;
-            if(parts[5].equals("1")){
+            if (parts[5].equals("1")) {
                 isLoyal = true;
             }
-            return new Savings(amountDouble,isLoyal,prof);
+            return new Savings(amountDouble, isLoyal, prof);
         }
-        else if(parts[0].equals("C")){
-            return new Checking(amountDouble,prof);
+        else if (parts[0].equals("C")) {
+            return new Checking(amountDouble, prof);
         }
-        else{
+        else {
             return new MoneyMarket(amountDouble, true, 0, prof);
         }
     }
 
     public void datePickerAction(ActionEvent actionEvent) {
-        try{
-            String date = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        }catch(Exception e){
+        try {
+            datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MMM-dd"));
+        } catch (Exception e) {
             System.out.println("WE HAVE CAUGHT AN EXCEPTION!\n");
         }
     }

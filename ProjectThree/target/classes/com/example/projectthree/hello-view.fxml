@@ -22,13 +22,13 @@
                         <TextField id="LastNameTextField" fx:id="lastNameTextField" layoutX="183.0" layoutY="46.0" />
                         <DatePicker id="DatePicker" fx:id="datePicker" layoutX="185.0" layoutY="84.0" onAction="#datePickerAction" />
                         <Label id="AccountTypeLabel" layoutX="18.0" layoutY="142.0" prefHeight="17.0" prefWidth="83.0" text="Account Type" />
-                        <RadioButton id="MoneyMarketButton" fx:id="moneyMarketButton" layoutX="102.0" layoutY="196.0" mnemonicParsing="false" onAction="#moneyMarketButtonAction" text="Money Market">
+                        <RadioButton id="MoneyMarketButton" fx:id="moneyMarketButton" layoutX="109.0" layoutY="185.0" mnemonicParsing="false" onAction="#moneyMarketButtonAction" text="Money Market">
                            <toggleGroup>
                               <ToggleGroup fx:id="AccountTypes" />
                            </toggleGroup></RadioButton>
-                        <RadioButton id="SavingsButton" fx:id="savingsButton" layoutX="103.0" layoutY="177.0" mnemonicParsing="false" onAction="#savingsButtonAction" text="Savings" toggleGroup="$AccountTypes" />
-                        <RadioButton id="CheckingButton" fx:id="checkingButton" layoutX="103.0" layoutY="160.0" mnemonicParsing="false" onAction="#checkingButtonAction" text="Checking" toggleGroup="$AccountTypes" />
-                        <RadioButton id="CollegeCheckingButton" fx:id="collegeCheckingButton" layoutX="102.0" layoutY="138.0" mnemonicParsing="false" onAction="#collegeCheckingButtonAction" prefHeight="26.0" prefWidth="146.0" text="College Checking" toggleGroup="$AccountTypes" />
+                        <RadioButton id="SavingsButton" fx:id="savingsButton" layoutX="113.0" layoutY="160.0" mnemonicParsing="false" onAction="#savingsButtonAction" text="Savings" toggleGroup="$AccountTypes" />
+                        <RadioButton id="CheckingButton" fx:id="checkingButton" layoutX="109.0" layoutY="142.0" mnemonicParsing="false" onAction="#checkingButtonAction" text="Checking" toggleGroup="$AccountTypes" />
+                        <RadioButton id="CollegeCheckingButton" fx:id="collegeCheckingButton" layoutX="109.0" layoutY="118.0" mnemonicParsing="false" onAction="#collegeCheckingButtonAction" prefHeight="26.0" prefWidth="146.0" text="College Checking" toggleGroup="$AccountTypes" />
                         <RadioButton id="NewarkButton" fx:id="newarkButton" layoutX="329.0" layoutY="151.0" mnemonicParsing="false" text="Newark" visible="false">
                            <toggleGroup>
                               <ToggleGroup fx:id="CampusCodes" />
@@ -73,10 +73,10 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button id="ADLoadFromFile" fx:id="adLoadFromFile" layoutX="60.0" layoutY="64.0" mnemonicParsing="false" onAction="#loadFromFileAction" text="Load Accounts From File" />
+                        <Button id="ADLoadFromFile" fx:id="adLoadFromFile" layoutX="66.0" layoutY="64.0" mnemonicParsing="false" onAction="#loadFromFileAction" text="Load Accounts From File" />
                         <Button id="ADPrintAllAccounts" fx:id="adPrintAllAccounts" layoutX="66.0" layoutY="18.0" mnemonicParsing="false" onAction="#adPrintAllAccountsAction" text="Print All Accounts" />
-                        <Button id="ADPrintInterestAndFees" fx:id="adPrintInterestAndFees" layoutX="67.0" layoutY="115.0" mnemonicParsing="false" onAction="#adPrintInterestAndFeesAction" text="Print Interest and Fees" />
-                        <Button id="ADUpdateWithInterestsAndFees" fx:id="adUpdateWithInterestsAndFees" layoutX="60.0" layoutY="166.0" mnemonicParsing="false" onAction="#adUpdatesAction" text="Update Accounts with Interests and Fees" />
+                        <Button id="ADPrintInterestAndFees" fx:id="adPrintInterestAndFees" layoutX="66.0" layoutY="115.0" mnemonicParsing="false" onAction="#adPrintInterestAndFeesAction" text="Print Interest and Fees" />
+                        <Button id="ADUpdateWithInterestsAndFees" fx:id="adUpdateWithInterestsAndFees" layoutX="66.0" layoutY="165.0" mnemonicParsing="false" onAction="#adUpdatesAction" text="Update Accounts with Interests and Fees" />
                      </children></AnchorPane>
             </content>
           </Tab>
