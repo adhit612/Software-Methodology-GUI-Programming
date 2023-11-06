@@ -511,8 +511,9 @@ public class HelloController {
             while(scanner.hasNext()){
                 contents.add(scanner.next());
             }
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
+        }catch(Exception e){
+            mainTextArea.appendText("No file selected\n");
+            return;
         }
         for(int i = 0; i < contents.size(); i ++){
             Account account = null;

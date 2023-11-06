@@ -75,7 +75,7 @@
                      <children>
                         <Button id="ADLoadFromFile" fx:id="adLoadFromFile" layoutX="60.0" layoutY="64.0" mnemonicParsing="false" onAction="#loadFromFileAction" text="Load Accounts From File" />
                         <Button id="ADPrintAllAccounts" fx:id="adPrintAllAccounts" layoutX="66.0" layoutY="18.0" mnemonicParsing="false" onAction="#adPrintAllAccountsAction" text="Print All Accounts" />
-                        <Button id="ADPrintInterestAndFees" fx:id="adPrintInterestAndFees" layoutX="54.0" layoutY="116.0" mnemonicParsing="false" onAction="#adPrintInterestAndFeesAction" text="Print Interest and Fees" />
+                        <Button id="ADPrintInterestAndFees" fx:id="adPrintInterestAndFees" layoutX="67.0" layoutY="115.0" mnemonicParsing="false" onAction="#adPrintInterestAndFeesAction" text="Print Interest and Fees" />
                         <Button id="ADUpdateWithInterestsAndFees" fx:id="adUpdateWithInterestsAndFees" layoutX="60.0" layoutY="166.0" mnemonicParsing="false" onAction="#adUpdatesAction" text="Update Accounts with Interests and Fees" />
                      </children></AnchorPane>
             </content>
