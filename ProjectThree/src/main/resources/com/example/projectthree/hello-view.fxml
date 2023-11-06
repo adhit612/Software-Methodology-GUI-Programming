@@ -20,7 +20,7 @@
                         <Label id="DateOfBirth" fx:id="dob" layoutX="102.0" layoutY="88.0" text="Date of Birth" />
                         <TextField id="FirstNameTextField" fx:id="firstNameTextField" layoutX="183.0" layoutY="14.0" />
                         <TextField id="LastNameTextField" fx:id="lastNameTextField" layoutX="183.0" layoutY="46.0" />
-                        <DatePicker id="DatePicker" fx:id="datePicker" layoutX="185.0" layoutY="84.0" />
+                        <DatePicker id="DatePicker" fx:id="datePicker" layoutX="185.0" layoutY="84.0" onAction="#datePickerAction" />
                         <Label id="AccountTypeLabel" layoutX="18.0" layoutY="142.0" prefHeight="17.0" prefWidth="83.0" text="Account Type" />
                         <RadioButton id="MoneyMarketButton" fx:id="moneyMarketButton" layoutX="109.0" layoutY="185.0" mnemonicParsing="false" onAction="#moneyMarketButtonAction" text="Money Market">
                            <toggleGroup>

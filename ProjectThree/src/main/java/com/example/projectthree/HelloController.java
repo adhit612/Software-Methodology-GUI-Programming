@@ -10,12 +10,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.awt.Desktop;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -249,21 +252,12 @@ public class HelloController {
             CampusCode campusCode = null;
             RadioButton selectedCampus = (RadioButton)CampusCodes.getSelectedToggle();
             String campusC = selectedCampus.getText();
-
             if(campusC.isEmpty()){
                 String err = "Please select campus code\n";
                 mainTextArea.appendText(err);
                 return;
             }
-            if (campusC.equals("NB")) {
-                campusCode = CampusCode.ZERO;
-            }
-            else if (campusC.equals("Newark")) {
-                campusCode = CampusCode.ONE;
-            }
-            else if (campusC.equals("Camden")) {
-                campusCode = CampusCode.TWO;
-            }
+            campusCode = oCommandSetCampusCode(campusC);
             account = new CollegeChecking(res, campusCode, prof);
         }
         else if (accountType.equals("Savings")) {
@@ -284,6 +278,21 @@ public class HelloController {
             }
         }
         oCommandFinalCheck(ad,account,accountType);
+    }
+
+    private CampusCode oCommandSetCampusCode(String campusC){
+        if (campusC.equals("NB")) {
+            return CampusCode.ZERO;
+        }
+        else if (campusC.equals("Newark")) {
+            return CampusCode.ONE;
+        }
+        else if (campusC.equals("Camden")) {
+            return CampusCode.TWO;
+        }
+        else{
+            return null;
+        }
     }
 
     private void oCommandFinalCheck(AccountDatabase ad, Account account, String accountType){
@@ -365,18 +374,22 @@ public class HelloController {
             Profile prof = new Profile(firstName, lastName, new Date(date));
             String type = accountType;
             Account acc = new Checking(prof);
-            if (ad.containsForClose(acc, type) == null) {
-                dCommandErrorPrinter(prof,accountType);
-            }
-            else{
-                Account account = ad.containsForClose(acc, type);
-                double balance = account.getBalance();
-                balance += amountDouble;
-                account.setBalance(balance);
-                ad.deposit(account);
-                String succMess = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Deposit - balance updated.\n";
-                mainTextArea.appendText(succMess);
-            }
+            depositCommandFinisher(ad,acc,type,prof,amountDouble,accountType);
+        }
+    }
+
+    private void depositCommandFinisher(AccountDatabase ad,Account acc,String type,Profile prof,Double amountDouble, String accountType){
+        if (ad.containsForClose(acc, type) == null) {
+            dCommandErrorPrinter(prof,accountType);
+        }
+        else{
+            Account account = ad.containsForClose(acc, type);
+            double balance = account.getBalance();
+            balance += amountDouble;
+            account.setBalance(balance);
+            ad.deposit(account);
+            String succMess = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Deposit - balance updated.\n";
+            mainTextArea.appendText(succMess);
         }
     }
 
@@ -423,26 +436,30 @@ public class HelloController {
             Profile prof = new Profile(firstName, lastName, new Date(date));
             String type = accountType;
             Account acc = new Checking(prof);
-            if (ad.containsForClose(acc, type) == null) {
-                wCommandErrorPrinter(prof,accountType);
+            wCommandFinisher(acc,prof,type,accountType,amountDouble);
+        }
+    }
+
+    private void wCommandFinisher(Account acc, Profile prof, String type, String accountType,Double amountDouble){
+        if (ad.containsForClose(acc, type) == null) {
+            wCommandErrorPrinter(prof,accountType);
+        }
+        else{
+            mainTextArea.appendText("IN ELSE 2\n");
+            Account account = ad.containsForClose(acc, type);
+            double balance = account.getBalance();
+            if (balance - amountDouble < 0) {
+                wCommandFinalErrorHandler(prof,accountType);
             }
             else{
-                mainTextArea.appendText("IN ELSE 2\n");
-                Account account = ad.containsForClose(acc, type);
-                double balance = account.getBalance();
-                if (balance - amountDouble < 0) {
-                    wCommandFinalErrorHandler(prof,accountType);
+                balance -= amountDouble;
+                account.setBalance(balance);
+                ad.withdraw(account);
+                if(accountType.equals("Money Market")){
+                    ((MoneyMarket) account).setWithdrawal();
                 }
-                else{
-                    balance -= amountDouble;
-                    account.setBalance(balance);
-                    ad.withdraw(account);
-                    if(accountType.equals("Money Market")){
-                        ((MoneyMarket) account).setWithdrawal();
-                    }
-                    String finalWithdrawMessage = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - balance updated.\n";
-                    mainTextArea.appendText(finalWithdrawMessage);
-                }
+                String finalWithdrawMessage = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") Withdraw - balance updated.\n";
+                mainTextArea.appendText(finalWithdrawMessage);
             }
         }
     }
@@ -456,7 +473,6 @@ public class HelloController {
         String err = prof.getFname() + " " + prof.getLname() + " " + prof.getDOB() + "(" + accountType + ") is not in the database.\n";
         mainTextArea.appendText(err);
     }
-
     //END OF DEPOSIT / WITHDRAW TAB
 
     //BEGIN OF ACCOUNT DATABASE TAB
@@ -500,31 +516,15 @@ public class HelloController {
         }
         for(int i = 0; i < contents.size(); i ++){
             Account account = null;
-
             String [] parts = contents.get(i).split(",");
             String firstName = parts[1];
             String lastName = parts[2];
             String date = parts[3];
-
             String [] dateSplit = date.split("/");
-
-            System.out.println("AHHAHAHHAHHHAHA");
-            for(String str : dateSplit){
-                System.out.println(str);
-            }
-            System.out.println("AHHAHAHHAHHHAHA");
-
             String dateFin = "";
-            dateFin += dateSplit[2];
-            dateFin += "-";
-            dateFin += dateSplit[1];
-            dateFin += "-";
-            dateFin += dateSplit[0];
-
-            System.out.println("date fin is /" + dateFin + "/");
-
+            dateFin += dateSplit[2];dateFin += "-";dateFin += dateSplit[1];
+            dateFin += "-";dateFin += dateSplit[0];
             Profile prof = new Profile(firstName,lastName,new Date(dateFin));
-
             String amountStr = parts[4];
             DecimalFormat decimalFormat = new DecimalFormat("#.##");
             double amountDouble = 0.0;
@@ -535,37 +535,47 @@ public class HelloController {
                 e.printStackTrace();
                 return;
             }
-
-            if(parts[0].equals("CC")){
-                CampusCode campusCode = null;
-                if(parts[5].equals("0")){
-                    campusCode = CampusCode.ZERO;
-                }
-                else if(parts[5].equals("1")){
-                    campusCode = CampusCode.ONE;
-                }
-                else{
-                    campusCode = CampusCode.TWO;
-                }
-                account = new CollegeChecking(amountDouble,campusCode,prof);
-            }
-            else if(parts[0].equals("S")){
-                boolean isLoyal = false;
-                if(parts[5].equals("1")){
-                    isLoyal = true;
-                }
-                account = new Savings(amountDouble,isLoyal,prof);
-            }
-            else if(parts[0].equals("C")){
-                account = new Checking(amountDouble,prof);
-            }
-            else{
-                account = new MoneyMarket(amountDouble, true, 0, prof);
-            }
+            account = loadCommandHelper(parts,amountDouble,prof);
             ad.open(account);
-            System.out.println(account.toString());
         }
         mainTextArea.appendText("Accounts loaded.\n");
+    }
+
+    private Account loadCommandHelper(String [] parts, Double amountDouble, Profile prof){
+        if(parts[0].equals("CC")){
+            CampusCode campusCode = null;
+            if(parts[5].equals("0")){
+                campusCode = CampusCode.ZERO;
+            }
+            else if(parts[5].equals("1")){
+                campusCode = CampusCode.ONE;
+            }
+            else{
+                campusCode = CampusCode.TWO;
+            }
+            return new CollegeChecking(amountDouble,campusCode,prof);
+        }
+        else if(parts[0].equals("S")){
+            boolean isLoyal = false;
+            if(parts[5].equals("1")){
+                isLoyal = true;
+            }
+            return new Savings(amountDouble,isLoyal,prof);
+        }
+        else if(parts[0].equals("C")){
+            return new Checking(amountDouble,prof);
+        }
+        else{
+            return new MoneyMarket(amountDouble, true, 0, prof);
+        }
+    }
+
+    public void datePickerAction(ActionEvent actionEvent) {
+        try{
+            String date = datePicker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }catch(Exception e){
+            System.out.println("WE HAVE CAUGHT AN EXCEPTION!\n");
+        }
     }
     //END OF ACCOUNT DATABASE TAB
 }
