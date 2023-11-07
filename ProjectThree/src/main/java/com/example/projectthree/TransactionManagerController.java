@@ -436,7 +436,7 @@ public class TransactionManagerController {
      */
     private void dCommandErrorPrinter(Profile prof, String accountType) {
         String err = prof.getFname() + " " + prof.getLname() + " " +
-                prof.getDOB() + "(" + accountType + ") is not in the database.";
+                prof.getDOB() + "(" + accountType + ") is not in the database.\n";
         mainTextArea.appendText(err);
     }
 
