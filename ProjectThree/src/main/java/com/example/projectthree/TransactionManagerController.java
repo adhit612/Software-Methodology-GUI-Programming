@@ -81,6 +81,7 @@ public class TransactionManagerController {
     public static final int MM_LIMIT = 2000;
     public static final int MAX_AGE = 24;
     public static final int MIN_AGE = 16;
+    public static final int ZERO_CHECK = 0;
     //end
 
     public Stage stage;
@@ -165,7 +166,7 @@ public class TransactionManagerController {
                 return;
             }
 
-            if (amountDouble <= 0) {
+            if (amountDouble <= ZERO_CHECK) {
                 mainTextArea.appendText("INITIAL AMOUNT CANNOT BE 0 OR NEGATIVE\n");
                 return;
             }
@@ -391,7 +392,7 @@ public class TransactionManagerController {
                 return;
             }
 
-            if (amountDouble <= 0) {
+            if (amountDouble <= ZERO_CHECK) {
                 mainTextArea.appendText("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
                 return;
             }
@@ -473,7 +474,7 @@ public class TransactionManagerController {
                 return;
             }
 
-            if (amountDouble <= 0) {
+            if (amountDouble <= ZERO_CHECK) {
                 mainTextArea.appendText
                         ("INITIAL TEXT AMOUNT CANNOT BE 0 OR NEGATIVE!\n");
                 return;
